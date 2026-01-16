@@ -8,7 +8,7 @@
     
     <script>
         // ==========================================
-        // PANEL EDYCJI - ZMIENIAJ DANE TUTAJ
+        // PANEL EDYCJI
         // ==========================================
         const RADIO_DATA = {
             nazwa: "YoungMafijja FM",
@@ -16,19 +16,26 @@
             kontakt_tel: "668-781-887",
             yt_link: "https://www.youtube.com/@Wiadomoscipo18",
             stream_url: "https://stream.zeno.fm/oxfrdtyiy4auv",
-            chat_url: "https://www5.cbox.ws/box/?boxid=954209&boxtag=v8r6n6"
+            chat_url: "https://www5.cbox.ws/box/?boxid=954209&boxtag=v8r6n6",
+            logo_url: "logo.png" // Upewnij się, że plik z logiem nazywa się logo.png i jest w tym samym folderze
         };
-        // ==========================================
     </script>
 
     <style>
         :root {
-            --bg-color: #f4f7f6; /* Bardzo jasny, nowoczesny szary */
+            --bg-color: #f4f7f6;
             --card-bg: #ffffff;
-            --primary: #2d3436; /* Głęboki grafit */
-            --accent: #0984e3;  /* Spokojny błękit */
             --text-main: #2d3436;
-            --text-light: #636e72;
+            --accent: #d63031; /* Czerwień nawiązująca do loga */
+            --nav-bg: #ffffff;
+        }
+
+        /* Klasy dla trybu ciemnego */
+        body.dark-mode {
+            --bg-color: #0c0c0c;
+            --card-bg: #161616;
+            --text-main: #ffffff;
+            --nav-bg: #111111;
         }
 
         body {
@@ -36,21 +43,29 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            line-height: 1.6;
+            transition: all 0.3s ease;
         }
 
-        /* Top Navigation */
         .nav {
-            padding: 20px 5%;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: var(--nav-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .nav h1 { font-weight: 700; font-size: 1.5rem; margin: 0; letter-spacing: -1px; }
-        .nav span { color: var(--accent); }
+        /* Przycisk zmiany motywu */
+        .theme-toggle {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat';
+        }
 
         .container {
             max-width: 1100px;
@@ -61,104 +76,71 @@
             gap: 30px;
         }
 
-        /* Player Style */
         .player-card {
             background: var(--card-bg);
             padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
             text-align: center;
         }
 
-        .status-pill {
-            display: inline-block;
-            background: #e1f5fe;
-            color: var(--accent);
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
+        /* Stylizacja Logo */
+        .logo-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
             margin-bottom: 20px;
+            border: 3px solid var(--accent);
+            object-fit: cover;
+            background: black;
         }
 
-        audio {
-            width: 100%;
-            margin-top: 30px;
-            height: 45px;
-        }
-
-        /* Buttons & Links */
-        .yt-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #fafafa;
-            border-radius: 16px;
-        }
+        audio { width: 100%; margin-top: 25px; border-radius: 10px; }
 
         .btn {
             display: inline-block;
-            background: var(--primary);
+            background: var(--accent);
             color: white;
             text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-weight: 500;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-
-        .contact-info {
+            padding: 12px 30px;
+            border-radius: 15px;
             margin-top: 20px;
-            font-size: 0.9rem;
-            color: var(--text-light);
+            transition: 0.3s;
         }
 
-        /* Chat Frame */
         .chat-card {
-            background: white;
-            border-radius: 24px;
+            background: var(--card-bg);
+            border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
-            border: 1px solid #eee;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
         }
 
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-light);
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 850px) {
-            .container { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 850px) { .container { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body>
+<body id="body">
 
 <nav class="nav">
-    <h1 id="r-nazwa">Young<span>Mafijja</span> FM</h1>
-    <div style="font-size: 0.9rem; font-weight: 500;">Kontakt: <span id="r-tel"></span></div>
+    <h1 style="margin:0; font-size: 1.4rem;">YoungMafijja <span style="color:var(--accent)">FM</span></h1>
+    <div>
+        <button class="theme-toggle" onclick="toggleTheme()">ZMIEŃ MOTYW</button>
+    </div>
 </nav>
 
 <div class="container">
     <div class="player-card">
-        <div class="status-pill">NA ŻYWO</div>
-        <h2 style="font-size: 2.2rem; margin: 0 0 10px 0;" id="r-tagline"></h2>
-        <p style="color: var(--text-light);">Ciesz się muzyką najwyższej jakości bez przerw.</p>
+        <img src="" id="r-logo" class="logo-img" alt="Logo YoungMafijja">
+        
+        <h2 id="r-tagline" style="margin: 10px 0;"></h2>
+        <p style="opacity: 0.7;">Słuchasz oficjalnego streamu YoungMafijja FM.</p>
         
         <audio id="r-player" controls autoplay>
             <source src="" type="audio/mpeg">
         </audio>
 
-        <div class="yt-section">
-            <h4 style="margin-top: 0;">Odwiedź nasz kanał</h4>
-            <p style="font-size: 0.9rem; color: var(--text-light);">Muzyka i aktualności również na YouTube.</p>
-            <a id="r-yt" href="#" target="_blank" class="btn">Subskrybuj na YouTube</a>
-        </div>
-
-        <div class="contact-info">
-            Zadzwoń do nas: <strong id="r-tel-info"></strong>
+        <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+            <p>Kontakt: <strong id="r-tel"></strong></p>
+            <a id="r-yt" href="#" target="_blank" class="btn">KANAŁ YOUTUBE</a>
         </div>
     </div>
 
@@ -167,18 +149,19 @@
     </div>
 </div>
 
-<footer>
-    &copy; 2026 YoungMafijja FM. Realizacja: Mixxx & Zeno Radio.
-</footer>
-
 <script>
     // Wstrzykiwanie danych
     document.getElementById('r-tagline').innerText = RADIO_DATA.tagline;
     document.getElementById('r-tel').innerText = RADIO_DATA.kontakt_tel;
-    document.getElementById('r-tel-info').innerText = RADIO_DATA.kontakt_tel;
     document.getElementById('r-yt').href = RADIO_DATA.yt_link;
+    document.getElementById('r-logo').src = RADIO_DATA.logo_url;
     document.getElementById('r-player').getElementsByTagName('source')[0].src = RADIO_DATA.stream_url;
     document.getElementById('r-chat').src = RADIO_DATA.chat_url;
+
+    // Funkcja zmiany motywu
+    function toggleTheme() {
+        document.getElementById('body').classList.toggle('dark-mode');
+    }
 </script>
 
 </body>
