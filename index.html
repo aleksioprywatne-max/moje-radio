@@ -3,164 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoungMafijja FM | Strefa Muzyki</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>YoungMafijja FM | Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     
-    <script>
-        // ==========================================
-        // PANEL EDYCJI
-        // ==========================================
-        const RADIO_DATA = {
-            nazwa: "YoungMafijja FM",
-            tagline: "Twój spokój, Twoja muzyka",
-            kontakt_tel: "668-781-887",
-            yt_link: "https://www.youtube.com/@Wiadomoscipo18",
-            stream_url: "https://stream.zeno.fm/oxfrdtyiy4auv",
-            chat_url: "https://www5.cbox.ws/box/?boxid=954209&boxtag=v8r6n6",
-            logo_url: "logo.png" // Upewnij się, że plik z logiem nazywa się logo.png i jest w tym samym folderze
-        };
-    </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        :root {
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --accent: #d63031; /* Czerwień nawiązująca do loga */
-            --nav-bg: #ffffff;
-        }
+        :root { --accent: #d63031; --bg: #f5f6fa; --text: #2f3640; --card: #ffffff; }
+        body.dark-mode { --bg: #1e272e; --text: #f5f6fa; --card: #2f3640; }
+        
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: 0.3s; }
+        
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--card); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* Styl Awatara w rogu */
+        .user-area { display: flex; align-items: center; gap: 15px; }
+        .avatar-container { display: none; position: relative; width: 45px; height: 45px; cursor: pointer; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        
+        .auth-btns button { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 
-        /* Klasy dla trybu ciemnego */
-        body.dark-mode {
-            --bg-color: #0c0c0c;
-            --card-bg: #161616;
-            --text-main: #ffffff;
-            --nav-bg: #111111;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            transition: all 0.3s ease;
-        }
-
-        .nav {
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--nav-bg);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        /* Przycisk zmiany motywu */
-        .theme-toggle {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: 'Montserrat';
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 30px;
-        }
-
-        .player-card {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        /* Stylizacja Logo */
-        .logo-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 3px solid var(--accent);
-            object-fit: cover;
-            background: black;
-        }
-
-        audio { width: 100%; margin-top: 25px; border-radius: 10px; }
-
-        .btn {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            padding: 12px 30px;
-            border-radius: 15px;
-            margin-top: 20px;
-            transition: 0.3s;
-        }
-
-        .chat-card {
-            background: var(--card-bg);
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-        }
-
-        @media (max-width: 850px) { .container { grid-template-columns: 1fr; } }
+        .container { max-width: 900px; margin: 40px auto; padding: 20px; text-align: center; }
+        .main-card { background: var(--card); padding: 40px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        .logo-main { width: 180px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 20px; }
+        
+        /* Panel zamówień piosenek */
+        #request-panel { display: none; margin-top: 30px; padding: 20px; border: 2px dashed var(--accent); border-radius: 20px; }
+        input { width: 70%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; margin: 10px 0; }
+        .send-btn { background: #2ecc71; color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
-<body id="body">
+<body id="page">
 
-<nav class="nav">
-    <h1 style="margin:0; font-size: 1.4rem;">YoungMafijja <span style="color:var(--accent)">FM</span></h1>
-    <div>
-        <button class="theme-toggle" onclick="toggleTheme()">ZMIEŃ MOTYW</button>
+<nav class="navbar">
+    <div style="font-weight: 900; font-size: 1.5rem;">YoungMafijja <span style="color:var(--accent)">FM</span></div>
+    
+    <div class="user-area">
+        <div id="auth-btns" class="auth-btns">
+            <button onclick="login()">Zaloguj / Zarejestruj</button>
+        </div>
+        <div id="user-profile" class="avatar-container" title="Kliknij, aby zmienić awatar" onclick="document.getElementById('fileInput').click()">
+            <img id="display-avatar" src="avatar.png" class="avatar-img">
+            <input type="file" id="fileInput" hidden onchange="changeAvatar(this)">
+        </div>
+        <button onclick="toggleTheme()" style="border-radius: 50%; border: none; cursor: pointer; padding: 8px;">🌙</button>
     </div>
 </nav>
 
 <div class="container">
-    <div class="player-card">
-        <img src="" id="r-logo" class="logo-img" alt="Logo YoungMafijja">
+    <div class="main-card">
+        <img src="logo.png" class="logo-main">
+        <h1>Radio On-Air</h1>
         
-        <h2 id="r-tagline" style="margin: 10px 0;"></h2>
-        <p style="opacity: 0.7;">Słuchasz oficjalnego streamu YoungMafijja FM.</p>
-        
-        <audio id="r-player" controls autoplay>
-            <source src="" type="audio/mpeg">
+        <audio id="radio-player" controls style="width: 100%;">
+            <source src="https://stream.zeno.fm/oxfrdtyiy4auv" type="audio/mpeg">
         </audio>
 
-        <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
-            <p>Kontakt: <strong id="r-tel"></strong></p>
-            <a id="r-yt" href="#" target="_blank" class="btn">KANAŁ YOUTUBE</a>
+        <div id="request-panel">
+            <h3>Zamów piosenkę</h3>
+            <p>Tytuł zostanie wysłany bezpośrednio do studia!</p>
+            <input type="text" id="song-name" placeholder="Artysta - Tytuł...">
+            <br>
+            <button class="send-btn" onclick="sendOrder()">WYŚLIJ DO RADIA</button>
         </div>
-    </div>
-
-    <div class="chat-card">
-        <iframe id="r-chat" src="" width="100%" height="600" frameborder="0"></iframe>
+        
+        <p id="guest-text" style="margin-top: 20px; opacity: 0.6;">Tylko zalogowani członkowie mafii mogą zamawiać piosenki.</p>
     </div>
 </div>
 
 <script>
-    // Wstrzykiwanie danych
-    document.getElementById('r-tagline').innerText = RADIO_DATA.tagline;
-    document.getElementById('r-tel').innerText = RADIO_DATA.kontakt_tel;
-    document.getElementById('r-yt').href = RADIO_DATA.yt_link;
-    document.getElementById('r-logo').src = RADIO_DATA.logo_url;
-    document.getElementById('r-player').getElementsByTagName('source')[0].src = RADIO_DATA.stream_url;
-    document.getElementById('r-chat').src = RADIO_DATA.chat_url;
+    // Inicjalizacja EmailJS (Wpisz swój klucz tutaj)
+    emailjs.init("TWOJ_PUBLIC_KEY"); 
 
-    // Funkcja zmiany motywu
+    function login() {
+        // Symulacja logowania na potrzeby GitHub Pages
+        alert("Zalogowano członka YoungMafijja FM!");
+        document.getElementById('auth-btns').style.display = 'none';
+        document.getElementById('user-profile').style.display = 'block';
+        document.getElementById('request-panel').style.display = 'block';
+        document.getElementById('guest-text').style.display = 'none';
+    }
+
+    function changeAvatar(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('display-avatar').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function sendOrder() {
+        const song = document.getElementById('song-name').value;
+        if (!song) return alert("Wpisz tytuł piosenki!");
+
+        const params = {
+            to_email: "TWOJ-MAIL@GMAIL.COM", // Twój mail
+            message: song,
+            from_name: "Słuchacz YoungMafijja"
+        };
+
+        // UWAGA: Musisz skonfigurować Service ID i Template ID w EmailJS
+        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', params)
+            .then(() => {
+                alert("Piosenka '" + song + "' wysłana do bazy!");
+                document.getElementById('song-name').value = "";
+            }, (err) => {
+                alert("Błąd wysyłki. Sprawdź konfigurację EmailJS.");
+            });
+    }
+
     function toggleTheme() {
-        document.getElementById('body').classList.toggle('dark-mode');
+        document.getElementById('page').classList.toggle('dark-mode');
     }
 </script>
 
