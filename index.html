@@ -3,140 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoungMafijja FM | Oficjalny Odsluch</title>
+    <title>YoungMafijja FM | Podziemie Nadaje</title>
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        // ==========================================
+        // PANEL EDYCJI - TUTAJ ZMIENIASZ TREŚĆ
+        // ==========================================
+        const RADIO_DATA = {
+            nazwa: "YOUNGMAFIJJA FM",
+            tagline: "Gruby Przekaz • Zero Ściemy",
+            status: "NADTAJEMY LIVE",
+            audycja: "NON-STOP MUZYKA (24/7)",
+            opis: "YoungMafijja FM to nie jest zwykłe radio. To podziemne brzmienie, zero reklam i tylko najświeższe tracki wyselekcjonowane przez ekipę.",
+            link_stream: "https://stream.zeno.fm/oxfrdtyiy4auv",
+            chat_link: "https://www5.cbox.ws/box/?boxid=954209&boxtag=v8r6n6"
+        };
+        // ==========================================
+    </script>
+
     <style>
-        :root {
-            --mafia-red: #ff0000;
-            --gold: #ffd700;
-            --dark-bg: #050505;
-        }
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--dark-bg);
-            color: white;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .header {
-            width: 100%;
-            padding: 30px 0;
-            text-align: center;
-            background: linear-gradient(to bottom, #111, #050505);
-            border-bottom: 3px solid var(--mafia-red);
-            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
-        }
-        h1 {
-            font-family: 'Permanent Marker', cursive;
-            font-size: 3.5em;
-            margin: 0;
-            letter-spacing: 2px;
-            text-shadow: 3px 3px 0px var(--mafia-red);
-        }
-        .tagline {
-            color: var(--gold);
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 5px;
-            margin-top: 5px;
-        }
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 25px;
-            max-width: 1200px;
-            width: 95%;
-            margin: 30px auto;
-        }
-        .player-card {
-            background: #0f0f0f;
-            padding: 40px;
-            border-radius: 5px;
-            border: 1px solid #222;
-            position: relative;
-            text-align: center;
-        }
-        .live-status {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: var(--mafia-red);
-            padding: 4px 12px;
-            font-weight: bold;
-            border-radius: 3px;
-            font-size: 0.9em;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
-        }
-        audio {
-            width: 100%;
-            margin: 40px 0;
-            filter: invert(100%) sepia(100%) saturate(500%) hue-rotate(300deg);
-        }
-        .chat-card {
-            background: #0f0f0f;
-            border-radius: 5px;
-            height: 600px;
-            border: 1px solid #222;
-        }
-        .info-strip {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-            border-left: 5px solid var(--gold);
-            text-align: left;
-        }
-        footer { padding: 40px; color: #444; font-size: 0.8em; }
+        :root { --mafia-red: #ff0000; --gold: #ffd700; --dark-bg: #050505; }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--dark-bg); color: white; margin: 0; }
         
-        @media (max-width: 900px) {
-            .main-grid { grid-template-columns: 1fr; }
-        }
+        /* Header */
+        .header { width: 100%; padding: 30px 0; text-align: center; background: #111; border-bottom: 3px solid var(--mafia-red); }
+        h1 { font-family: 'Permanent Marker', cursive; font-size: 3.5em; margin: 0; text-shadow: 3px 3px 0px var(--mafia-red); }
+        .tagline { color: var(--gold); text-transform: uppercase; font-weight: bold; letter-spacing: 5px; }
+
+        /* Grid */
+        .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        
+        /* Player Card */
+        .player-card { background: #0f0f0f; padding: 40px; border-radius: 5px; border: 1px solid #222; text-align: center; position: relative; }
+        .live-status { position: absolute; top: 20px; left: 20px; background: var(--mafia-red); padding: 5px 15px; font-weight: bold; animation: pulse 2s infinite; border-radius: 3px; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,0,0,0); } }
+
+        audio { width: 100%; margin: 30px 0; filter: invert(100%) sepia(100%) saturate(500%) hue-rotate(300deg); }
+
+        /* Info boxes */
+        .info-strip { background: #1a1a1a; padding: 15px; border-radius: 5px; margin-top: 20px; border-left: 5px solid var(--gold); text-align: left; }
+        .mafia-box { margin-top: 30px; padding: 20px; border: 1px dashed #444; text-align: left; }
+
+        /* Chat */
+        .chat-card { background: #0f0f0f; border-radius: 5px; height: 600px; border: 1px solid #222; }
+
+        @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>YOUNGMAFIJJA FM</h1>
-    <div class="tagline">Gruby Przekaz • Zero Ściemy</div>
+    <h1 id="r-nazwa"></h1>
+    <div class="tagline" id="r-tagline"></div>
 </div>
 
 <div class="main-grid">
     <div class="player-card">
-        <div class="live-status">ON AIR</div>
-        <h2 style="font-size: 2em; margin-bottom: 10px;">GŁÓWNY KANAŁ NADWANIA</h2>
-        <p style="color: #888;">Wbijasz do rodziny. Słuchasz na własną odpowiedzialność.</p>
+        <div class="live-status" id="r-status"></div>
+        <h2 style="font-size: 2em; margin-bottom: 10px;">GŁÓWNY KANAŁ</h2>
+        <p id="r-audycja" style="font-weight: bold; color: var(--gold);"></p>
 
-        <audio controls autoplay>
-            <source src="TWOJ_LINK_DO_STREAMU" type="audio/mpeg">
+        <audio id="r-player" controls autoplay>
+            <source src="" type="audio/mpeg">
         </audio>
 
         <div class="info-strip">
-            <span style="color: var(--gold)">STATUS:</span> Nadajemy prosto z podziemia.<br>
-            <span style="color: var(--gold)">EKIPA:</span> YoungMafijja Crew
+            <span style="color: var(--gold)">INFO:</span> Muzyka 24/7 bez zbędnego gadania.<br>
+            <span style="color: var(--gold)">SYSTEM:</span> YoungMafijja Sound Engine
         </div>
 
-        <div style="margin-top: 40px; padding: 20px; border: 1px dashed #333;">
-            <h3 style="color: var(--mafia-red)">O RADIU</h3>
-            <p>YoungMafijja FM to nie tylko radio, to styl życia. Grane są najświeższe tracki, autorskie sety i audycje na żywo bez cenzury.</p>
+        <div class="mafia-box">
+            <h3 style="color: var(--mafia-red); margin-top: 0;">ZASADY RODZINY</h3>
+            <p id="r-opis"></p>
         </div>
     </div>
 
     <div class="chat-card">
-        <iframe src="https://www5.cbox.ws/box/?boxid=954209&boxtag=v8r6n6" width="100%" height="100%" frameborder="0"></iframe>
+        <iframe id="r-chat" src="" width="100%" height="100%" frameborder="0"></iframe>
     </div>
 </div>
 
-<footer>
-    &copy; 2026 YOUNGMAFIJJA FM | System: Mixxx | Serwer: Zeno.fm
+<footer style="text-align: center; padding: 40px; color: #444;">
+    &copy; 2026 YOUNGMAFIJJA FM | Audio by Mixxx
 </footer>
+
+<script>
+    // Automatyczne ładowanie danych do strony
+    document.getElementById('r-nazwa').innerText = RADIO_DATA.nazwa;
+    document.getElementById('r-tagline').innerText = RADIO_DATA.tagline;
+    document.getElementById('r-status').innerText = RADIO_DATA.status;
+    document.getElementById('r-audycja').innerText = RADIO_DATA.audycja;
+    document.getElementById('r-opis').innerText = RADIO_DATA.opis;
+    document.getElementById('r-player').getElementsByTagName('source')[0].src = RADIO_DATA.link_stream;
+    document.getElementById('r-chat').src = RADIO_DATA.chat_link;
+</script>
 
 </body>
 </html>
