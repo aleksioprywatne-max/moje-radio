@@ -3,60 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moje Radio Internetowe</title>
+    <title>YoungMafijja FM | Oficjalny Odsluch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --mafia-red: #ff0000;
+            --gold: #ffd700;
+            --dark-bg: #050505;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
-        .container {
+        .header {
+            width: 100%;
+            padding: 30px 0;
             text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(to bottom, #111, #050505);
+            border-bottom: 3px solid var(--mafia-red);
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
         }
-        h1 { margin-bottom: 10px; color: #00d4ff; }
-        p { color: #ccc; margin-bottom: 30px; }
+        h1 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 3.5em;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0px var(--mafia-red);
+        }
+        .tagline {
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 5px;
+            margin-top: 5px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            max-width: 1200px;
+            width: 95%;
+            margin: 30px auto;
+        }
+        .player-card {
+            background: #0f0f0f;
+            padding: 40px;
+            border-radius: 5px;
+            border: 1px solid #222;
+            position: relative;
+            text-align: center;
+        }
+        .live-status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--mafia-red);
+            padding: 4px 12px;
+            font-weight: bold;
+            border-radius: 3px;
+            font-size: 0.9em;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
         audio {
             width: 100%;
-            margin-top: 20px;
-            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+            margin: 40px 0;
+            filter: invert(100%) sepia(100%) saturate(500%) hue-rotate(300deg);
         }
-        .status {
-            display: inline-block;
-            padding: 5px 15px;
-            background: #28a745;
-            border-radius: 20px;
-            font-size: 0.8em;
-            margin-bottom: 20px;
+        .chat-card {
+            background: #0f0f0f;
+            border-radius: 5px;
+            height: 600px;
+            border: 1px solid #222;
+        }
+        .info-strip {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 5px solid var(--gold);
+            text-align: left;
+        }
+        footer { padding: 40px; color: #444; font-size: 0.8em; }
+        
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="status">NA ŻYWO</div>
-    <h1>Moja Stacja Radiowa</h1>
-    <p>Słuchaj najlepszej muzyki prosto z mojego laptopa!</p>
-    
-    <audio controls>
-        <source src="https://stream.zeno.fm/oxfrdtyiy4auv" type="audio/mpeg">
-        Twoja przeglądarka nie obsługuje odtwarzacza.
-    </audio>
+<div class="header">
+    <h1>YOUNGMAFIJJA FM</h1>
+    <div class="tagline">Gruby Przekaz • Zero Ściemy</div>
+</div>
 
-    <div style="margin-top: 20px; font-size: 0.9em; color: #888;">
-        Pozdrawiam wszystkich słuchaczy!
+<div class="main-grid">
+    <div class="player-card">
+        <div class="live-status">ON AIR</div>
+        <h2 style="font-size: 2em; margin-bottom: 10px;">GŁÓWNY KANAŁ NADWANIA</h2>
+        <p style="color: #888;">Wbijasz do rodziny. Słuchasz na własną odpowiedzialność.</p>
+
+        <audio controls autoplay>
+            <source src="TWOJ_LINK_DO_STREAMU" type="audio/mpeg">
+        </audio>
+
+        <div class="info-strip">
+            <span style="color: var(--gold)">STATUS:</span> Nadajemy prosto z podziemia.<br>
+            <span style="color: var(--gold)">EKIPA:</span> YoungMafijja Crew
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; border: 1px dashed #333;">
+            <h3 style="color: var(--mafia-red)">O RADIU</h3>
+            <p>YoungMafijja FM to nie tylko radio, to styl życia. Grane są najświeższe tracki, autorskie sety i audycje na żywo bez cenzury.</p>
+        </div>
+    </div>
+
+    <div class="chat-card">
+        <iframe src="https://www5.cbox.ws/box/?boxid=954209&boxtag=v8r6n6" width="100%" height="100%" frameborder="0"></iframe>
     </div>
 </div>
+
+<footer>
+    &copy; 2026 YOUNGMAFIJJA FM | System: Mixxx | Serwer: Zeno.fm
+</footer>
 
 </body>
 </html>
