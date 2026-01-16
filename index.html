@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Radio Internetowe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 { margin-bottom: 10px; color: #00d4ff; }
+        p { color: #ccc; margin-bottom: 30px; }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #28a745;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="status">NA ŻYWO</div>
+    <h1>Moja Stacja Radiowa</h1>
+    <p>Słuchaj najlepszej muzyki prosto z mojego laptopa!</p>
+    
+    <audio controls>
+        <source src="https://stream.zeno.fm/oxfrdtyiy4auv" type="audio/mpeg">
+        Twoja przeglądarka nie obsługuje odtwarzacza.
+    </audio>
+
+    <div style="margin-top: 20px; font-size: 0.9em; color: #888;">
+        Pozdrawiam wszystkich słuchaczy!
+    </div>
+</div>
+
+</body>
+</html>
