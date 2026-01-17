@@ -3,187 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoungMafijja FM | Multimedia Hub</title>
+    <title>YoungMafijja FM | Official Underground Radio</title>
+    
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@200;400;900&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    
     <style>
+        /* =========================================
+           KONFIGURACJA STYLI (THEME: ELITE MAFIA)
+           ========================================= */
         :root {
             --primary: #ff0000;
-            --bg: #030303;
-            --card: rgba(15, 15, 15, 0.95);
-            --border: rgba(255, 0, 0, 0.3);
-            --glow: 0 0 30px rgba(255, 0, 0, 0.5);
+            --primary-rgb: 255, 0, 0;
+            --bg: #050505;
+            --card-bg: rgba(15, 15, 15, 0.9);
+            --border: rgba(255, 0, 0, 0.2);
+            --glow: 0 0 40px rgba(255, 0, 0, 0.3);
+            --text-main: #ffffff;
+            --text-dim: #888888;
         }
 
-        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
         body {
-            margin: 0; background: var(--bg); color: #fff;
+            background: var(--bg);
+            color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            background-image: radial-gradient(circle at 50% 50%, #1a0505 0%, #030303 100%);
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* LOGOWANIE */
-        #gate {
-            position: fixed; inset: 0; z-index: 9999; background: #000;
-            display: flex; justify-content: center; align-items: center;
+        /* --- ANIMOWANE TŁO --- */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
         }
-        .gate-box {
-            padding: 40px; border: 1px solid var(--border); border-radius: 30px;
-            background: var(--card); text-align: center; box-shadow: var(--glow);
+
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,0,0,0.02) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: fixed;
+            bottom: 100%;
+            animation: scanning 8s linear infinite;
+            pointer-events: none;
         }
 
-        /* LAYOUT */
-        .wrapper { max-width: 1400px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
-        
-        .header { grid-column: span 2; display: flex; align-items: center; justify-content: space-between; padding: 20px; }
-        .logo-group { display: flex; align-items: center; gap: 20px; }
-        .logo-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary); box-shadow: var(--glow); }
-        .title { font-family: 'Syncopate', sans-serif; font-size: 1.8rem; letter-spacing: -1px; margin: 0; }
-
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 25px; padding: 25px; backdrop-filter: blur(10px); }
-
-        /* MULTI-SOURCE SELECTOR */
-        .source-tabs { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 15px; }
-        .tab-btn { 
-            flex: 1; padding: 12px; background: transparent; border: none; 
-            color: #888; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 0.8rem;
+        @keyframes scanning {
+            0% { bottom: 100%; }
+            100% { bottom: -100%; }
         }
-        .tab-btn.active { background: var(--primary); color: #fff; box-shadow: var(--glow); }
 
-        /* MEDIA CONTAINERS */
-        #audio-container { width: 100%; }
-        #video-container { width: 100%; aspect-ratio: 16/9; display: none; border-radius: 15px; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
-        audio { width: 100%; filter: invert(1) hue-rotate(180deg); }
+        /* --- EKRAN LOGOWANIA --- */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-        /* INPUTS & BUTTONS */
+        .login-card {
+            width: 400px;
+            padding: 50px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: var(--glow);
+            backdrop-filter: blur(20px);
+        }
+
+        .login-card h2 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        /* --- GŁÓWNY UKŁAD --- */
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            grid-template-rows: auto 1fr;
+            gap: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .app-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- HEADER --- */
+        header {
+            grid-column: span 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .main-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            box-shadow: var(--glow);
+            background: #111;
+        }
+
+        .brand-text h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+            margin: 0;
+        }
+
+        .brand-text p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        /* --- PLAYER I MEDIA --- */
+        .content-main {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 35px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .source-selector {
+            display: flex;
+            background: rgba(0,0,0,0.5);
+            padding: 8px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .source-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 700;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border-radius: 15px;
+        }
+
+        .source-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(255,0,0,0.3);
+        }
+
+        #media-view {
+            width: 100%;
+            min-height: 200px;
+            border-radius: 20px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .yt-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            width: 100%;
+            display: none;
+        }
+
+        .yt-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 20px;
+        }
+
+        /* --- AUDIO PLAYER --- */
+        #audio-controls {
+            width: 100%;
+            padding: 20px;
+        }
+
+        audio {
+            width: 100%;
+            height: 50px;
+            filter: invert(1) hue-rotate(180deg) brightness(1.5);
+        }
+
+        /* --- FORMULARZE --- */
+        .form-group {
+            margin-top: 20px;
+        }
+
         input {
-            width: 100%; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-            color: #fff; border-radius: 10px; margin: 10px 0;
+            width: 100%;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 15px;
         }
-        .btn-send {
-            width: 100%; padding: 15px; background: var(--primary); border: none; border-radius: 10px;
-            color: #fff; font-family: 'Syncopate'; font-weight: bold; cursor: pointer;
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.07);
         }
-        .btn-send:hover { transform: scale(1.02); box-shadow: var(--glow); }
+
+        .action-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--primary);
+            border: none;
+            border-radius: 15px;
+            color: #fff;
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 2px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255,0,0,0.5);
+        }
+
+        /* --- CZAT --- */
+        .chat-sidebar {
+            height: 100%;
+        }
+
+        .chat-card {
+            height: 800px;
+            padding: 10px;
+        }
+
+        .chat-card iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 25px;
+        }
+
+        /* --- WIDŻET STATUSU --- */
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         .hidden { display: none !important; }
-        
-        @media (max-width: 1000px) { .wrapper { grid-template-columns: 1fr; } .header { grid-column: span 1; } }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1100px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            header {
+                grid-column: span 1;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            .chat-card { height: 500px; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="gate">
-        <div class="gate-box">
-            <h1 class="title" style="margin-bottom: 20px;">WERYFIKACJA</h1>
-            <input type="text" id="nick" placeholder="Podaj ksywkę...">
-            <button class="btn-send" onclick="enter()">WEJDŹ DO RODZINY</button>
+    <div class="bg-overlay"></div>
+    <div class="scanline"></div>
+
+    <div id="login-overlay">
+        <div class="login-card">
+            <div style="margin-bottom: 20px;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="var(--primary)">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                </svg>
+            </div>
+            <h2>PROTOKÓŁ DOSTĘPU</h2>
+            <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 25px;">Zidentyfikuj się w systemie YoungMafijja</p>
+            <input type="text" id="user-nick" placeholder="WPISZ KSYWĘ...">
+            <button class="action-btn" onclick="authorize()">AUTORYZUJ</button>
         </div>
     </div>
 
-    <div id="app" class="hidden">
-        <div class="wrapper">
-            <header class="header card">
-                <div class="logo-group">
-                    <img src="https://yt3.googleusercontent.com/ytc/AIdro_n4K9L7J6S8U5R3G1C2B3A4D5E6F7G8H9I0J1K2=s160-c-k-c0x00ffffff-no-rj" class="logo-img">
-                    <div>
-                        <h1 class="title">YOUNGMAFIJJA FM</h1>
-                        <span id="user-tag" style="font-size: 0.7rem; color: var(--primary); font-weight: 900;"></span>
-                    </div>
+    <div id="main-app" class="app-container">
+        
+        <header>
+            <div class="brand">
+                <img src="https://yt3.ggpht.com/ytc/AIdro_n8-pY7XmE5G9D-f8v3m3r3-v8r6n6Y-XUAxrO=s88-c-k-c0x00ffffff-no-rj" class="main-logo" alt="Logo">
+                <div class="brand-text">
+                    <h1>YOUNGMAFIJJA FM</h1>
+                    <p id="agent-id">ID: UNKNOWN_ENTITY</p>
                 </div>
-                <div style="text-align: right;">
-                    <div style="color: #28a745; font-size: 0.7rem; font-weight: bold;">● SYSTEM ONLINE</div>
+            </div>
+            
+            <div class="status-pill">
+                <div class="dot"></div>
+                SYSTEM ONLINE
+            </div>
+        </header>
+
+        <section class="content-main">
+            <div class="card">
+                <div class="source-selector">
+                    <button class="source-btn active" id="btn-audio" onclick="toggleMedia('audio')">ZENO.FM AUDIO</button>
+                    <button class="source-btn" id="btn-video" onclick="toggleMedia('video')">YOUTUBE LIVE</button>
                 </div>
-            </header>
 
-            <main>
-                <div class="card">
-                    <div class="source-tabs">
-                        <button class="tab-btn active" onclick="switchSource('zeno')">ZENO.FM (AUDIO)</button>
-                        <button class="tab-btn" onclick="switchSource('yt')">YOUTUBE (LIVE)</button>
-                    </div>
-
-                    <div id="audio-container">
-                        <audio id="player" controls>
+                <div id="media-view">
+                    <div id="audio-player-container" style="width: 100%;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZ3R4Z3R4Z3R4Z3R4Z3R4/3o7TKMGpx4A9502WqY/giphy.gif" width="150" style="filter: grayscale(1) invert(1); opacity: 0.2;">
+                            <p style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--primary);">ODTWARZANIE STRUMIENIOWE...</p>
+                        </div>
+                        <audio id="main-audio-player" controls>
                             <source src="https://stream.zeno.fm/oxfrdtyiy4auv" type="audio/mpeg">
                         </audio>
                     </div>
 
-                    <div id="video-container">
-                        <iframe id="yt-player" src="https://www.youtube.com/embed/live_stream?channel=UCv-B3A-v8r6n6Y-XUAxrO" allowfullscreen></iframe>
-                    </div>
-                    <p style="text-align: center; font-size: 0.7rem; opacity: 0.4; margin-top: 15px;">Wybierz źródło sygnału, aby rozpocząć odsłuch.</p>
-                </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h3 style="font-family: 'Syncopate'; font-size: 0.9rem;">ZAMÓWIENIA & KONTAKT</h3>
-                    <input type="text" id="order" placeholder="Wpisz piosenkę lub wiadomość...">
-                    <button class="btn-send" onclick="sendOrder()">WYŚLIJ DO STUDIA</button>
-                    
-                    <div style="margin-top: 20px; padding: 15px; border: 1px dashed var(--border); border-radius: 10px; text-align: center;">
-                        <small style="opacity: 0.5;">STUDIO HOTLINE (AUX):</small>
-                        <div style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">668-781-887</div>
+                    <div id="video-player-container" class="yt-wrapper">
+                        <iframe id="yt-frame" src="https://www.youtube.com/embed/live_stream?channel=UCv-B3A-v8r6n6Y-XUAxrO" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
                 </div>
-            </main>
+            </div>
 
-            <aside>
-                <div class="card" style="height: 650px; padding: 10px;">
-                    <iframe src="https://www5.cbox.ws/box/?boxid=960809&boxtag=XUAxrO"></iframe>
+            <div class="card">
+                <h2 style="font-family: 'Syncopate'; font-size: 1rem; margin-bottom: 20px;">PRZEKAZ DO STUDIA</h2>
+                <div class="form-group">
+                    <input type="text" id="order-content" placeholder="Tytuł utworu lub tajna wiadomość...">
+                    <button class="action-btn" onclick="submitOrder()">WYŚLIJ RAPORT</button>
                 </div>
-            </aside>
-        </div>
+                <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 20px; display: flex; align-items: center; gap: 20px;">
+                    <div style="font-size: 1.5rem;">📞</div>
+                    <div>
+                        <p style="font-size: 0.6rem; color: var(--text-dim);">LINIA BEZPOŚREDNIA (AUX):</p>
+                        <p style="font-size: 1.2rem; font-weight: 900; letter-spacing: 2px;">668-781-887</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="chat-sidebar">
+            <div class="card chat-card">
+                <iframe src="https://www5.cbox.ws/box/?boxid=960809&boxtag=XUAxrO"></iframe>
+            </div>
+        </aside>
+
     </div>
 
     <script>
-        (function() { emailjs.init("ovHQ1zzVyYg0_aLU6"); })();
+        /* =========================================
+           LOGIKA SYSTEMOWA
+           ========================================= */
 
-        function enter() {
-            const nick = document.getElementById('nick').value;
-            if(nick.length < 3) return alert("Ksywka za krótka!");
-            localStorage.setItem('ym_nick', nick);
-            location.reload();
+        // 1. Inicjalizacja EmailJS
+        (function() {
+            emailjs.init("ovHQ1zzVyYg0_aLU6");
+        })();
+
+        // 2. Autoryzacja i Sesja
+        function authorize() {
+            const nick = document.getElementById('user-nick').value.trim();
+            if (nick.length < 3) {
+                alert("KSYWA ZA KRÓTKA DLA SYSTEMU.");
+                return;
+            }
+            localStorage.setItem('ymfm_nick', nick);
+            startSystem();
         }
 
-        if(localStorage.getItem('ym_nick')) {
-            document.getElementById('gate').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            document.getElementById('user-tag').innerText = "AGENT: " + localStorage.getItem('ym_nick').toUpperCase();
+        function startSystem() {
+            const nick = localStorage.getItem('ymfm_nick');
+            if (!nick) return;
+
+            document.getElementById('login-overlay').style.display = 'none';
+            const app = document.getElementById('main-app');
+            app.classList.remove('hidden');
+            setTimeout(() => app.classList.add('visible'), 100);
+            
+            document.getElementById('agent-id').innerText = `AGENT ID: ${nick.toUpperCase()}_${Math.floor(Math.random()*999)}`;
         }
 
-        function switchSource(type) {
-            const audioC = document.getElementById('audio-container');
-            const videoC = document.getElementById('video-container');
-            const player = document.getElementById('player');
-            const btns = document.querySelectorAll('.tab-btn');
+        // 3. Obsługa mediów
+        function toggleMedia(type) {
+            const audioCont = document.getElementById('audio-player-container');
+            const videoCont = document.getElementById('video-player-container');
+            const audioPl = document.getElementById('main-audio-player');
+            const btnA = document.getElementById('btn-audio');
+            const btnV = document.getElementById('btn-video');
 
-            btns.forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if(type === 'zeno') {
-                audioC.style.display = 'block';
-                videoC.style.display = 'none';
-                player.play();
+            if (type === 'audio') {
+                audioCont.style.display = 'block';
+                videoCont.style.display = 'none';
+                btnA.classList.add('active');
+                btnV.classList.remove('active');
             } else {
-                audioC.style.display = 'none';
-                videoC.style.display = 'block';
-                player.pause();
+                audioCont.style.display = 'none';
+                videoCont.style.display = 'block';
+                btnV.classList.add('active');
+                btnA.classList.remove('active');
+                audioPl.pause(); // Pauza radia gdy odpalamy wideo
             }
         }
 
-        function sendOrder() {
-            const val = document.getElementById('order').value;
-            if(!val) return alert("Puste pole!");
-            
+        // 4. Wysyłanie EmailJS
+        function submitOrder() {
+            const content = document.getElementById('order-content').value;
+            const nick = localStorage.getItem('ymfm_nick');
+
+            if (!content) return alert("RAPORT NIE MOŻE BYĆ PUSTY.");
+
             emailjs.send("service_wb8ahlc", "template_okunbql", {
-                user_name: localStorage.getItem('ym_nick'),
-                song_title: val
+                user_name: nick,
+                song_title: content
             }).then(() => {
-                alert("Wysłano do studia!");
-                document.getElementById('order').value = "";
+                alert("RAPORT DOSTARCZONY DO STUDIA.");
+                document.getElementById('order-content').value = "";
+            }).catch(err => {
+                console.error(err);
+                alert("BŁĄD TRANSMISJI DANYCH.");
             });
         }
+
+        // 5. Autostart sesji
+        window.onload = () => {
+            if (localStorage.getItem('ymfm_nick')) {
+                startSystem();
+            }
+        };
     </script>
 </body>
 </html>
