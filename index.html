@@ -3,345 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoungMafijja FM | Centrala Operacyjna</title>
-    
+    <title>YoungMafijja FM | Official Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@300&family=Inter:wght@200;400;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;900&family=Inter:wght@200;400;900&display=swap" rel="stylesheet">
     <style>
-        /* =========================================
-           KONFIGURACJA WIZUALNA (ELITE MAFIA)
-           ========================================= */
         :root {
             --primary: #ff0000;
-            --primary-glow: rgba(255, 0, 0, 0.5);
-            --bg-black: #020202;
-            --card-surface: rgba(12, 12, 12, 0.98);
-            --border-glow: rgba(255, 0, 0, 0.2);
-            --shadow-mafia: 0 0 40px rgba(255, 0, 0, 0.45);
-            --font-main: 'Inter', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-            --font-head: 'Syncopate', sans-serif;
+            --bg: #030303;
+            --card: rgba(15, 15, 15, 0.98);
+            --border: rgba(255, 0, 0, 0.25);
+            --glow: 0 0 35px rgba(255, 0, 0, 0.4);
         }
-
-        /* --- PODSTAWY --- */
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-            scrollbar-width: thin; scrollbar-color: var(--primary) #000;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background-color: var(--bg-black);
-            color: #ffffff;
-            font-family: var(--font-main);
-            overflow-x: hidden;
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(255, 0, 0, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(255, 0, 0, 0.08) 0% , transparent 45%);
+            background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif;
+            min-height: 100vh; overflow-x: hidden;
+            background-image: radial-gradient(circle at 15% 15%, rgba(255, 0, 0, 0.08) 0%, transparent 45%);
         }
-
-        /* --- ANIMACJE --- */
-        @keyframes vinylSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        #auth-screen {
+            position: fixed; inset: 0; z-index: 9999; background: #000;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        @keyframes statusPulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
+        .auth-box {
+            width: 450px; padding: 50px; background: var(--card); border: 1px solid var(--border);
+            border-radius: 40px; text-align: center; box-shadow: var(--glow);
         }
-
-        /* --- EKRAN STARTOWY --- */
-        #auth-gate {
-            position: fixed; inset: 0; z-index: 10000;
-            background: #000; display: flex; align-items: center; justify-content: center;
+        .main-ui {
+            display: grid; grid-template-columns: 1fr 400px; max-width: 1500px;
+            margin: 0 auto; gap: 25px; padding: 30px; opacity: 0; transition: 1s;
         }
-
-        .auth-panel {
-            width: 100%; max-width: 480px; padding: 60px;
-            background: var(--card-surface); border: 1px solid var(--border-glow);
-            border-radius: 40px; text-align: center; box-shadow: var(--shadow-mafia);
-        }
-
-        /* --- LAYOUT GŁÓWNY --- */
-        .grid-container {
-            display: grid; grid-template-columns: 1fr 440px;
-            max-width: 1600px; margin: 0 auto; gap: 30px; padding: 40px;
-            opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .grid-container.active { opacity: 1; }
-
+        .main-ui.active { opacity: 1; }
         header {
             grid-column: span 2; display: flex; justify-content: space-between;
-            align-items: center; padding: 35px 50px;
-            background: var(--card-surface); border: 1px solid var(--border-glow);
-            border-radius: 40px; margin-bottom: 10px; box-shadow: 0 15px 45px rgba(0,0,0,0.7);
+            align-items: center; padding: 30px; background: var(--card);
+            border: 1px solid var(--border); border-radius: 35px;
         }
-
-        /* --- ELEMENTY BRANDINGU --- */
-        .brand-zone { display: flex; align-items: center; gap: 30px; }
-        .logo-main {
-            width: 100px; height: 100px; border-radius: 50%;
-            border: 3px solid var(--primary); box-shadow: var(--shadow-mafia);
-            background: #111; transition: transform 0.6s ease;
+        .logo-box img {
+            width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--primary);
+            box-shadow: var(--glow);
         }
-        .logo-main.playing { animation: vinylSpin 8s linear infinite; }
-
-        .brand-text h1 {
-            font-family: var(--font-head); font-size: 2.5rem;
-            letter-spacing: -2px; text-shadow: 0 0 20px var(--primary-glow);
-        }
-
-        /* --- MEDIA HUB --- */
-        .media-stack { display: flex; flex-direction: column; gap: 35px; }
+        .logo-box img.spinning { animation: spin 8s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .hub-card {
-            background: var(--card-surface); border: 1px solid var(--border-glow);
-            border-radius: 40px; padding: 50px; position: relative; overflow: hidden;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 35px; padding: 40px; margin-bottom: 25px;
         }
-
-        .source-nav {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-            background: rgba(0,0,0,0.7); padding: 12px; border-radius: 25px; margin-bottom: 40px;
-        }
-
+        .nav-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
         .nav-btn {
-            padding: 20px; border: none; background: transparent;
-            color: #555; font-family: var(--font-head); font-size: 0.8rem;
-            font-weight: 700; cursor: pointer; border-radius: 18px; transition: 0.4s;
+            padding: 18px; border: none; background: rgba(0,0,0,0.5); color: #555;
+            font-family: 'Syncopate'; font-size: 0.75rem; cursor: pointer; border-radius: 15px;
         }
-
-        .nav-btn.active {
-            background: var(--primary); color: #fff; box-shadow: 0 10px 25px rgba(255,0,0,0.5);
+        .nav-btn.active { background: var(--primary); color: #fff; box-shadow: 0 8px 20px rgba(255,0,0,0.4); }
+        .viewport { width: 100%; border-radius: 25px; background: #000; min-height: 300px; display: flex; align-items: center; justify-content: center; }
+        iframe { width: 100%; height: 100%; border: none; border-radius: 25px; }
+        audio { width: 100%; filter: invert(1) hue-rotate(180deg); }
+        input {
+            width: 100%; padding: 22px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 18px; color: #fff; margin-bottom: 20px;
         }
-
-        .viewport {
-            width: 100%; border-radius: 30px; background: #000;
-            min-height: 300px; display: flex; align-items: center; justify-content: center;
+        .btn-action {
+            width: 100%; padding: 22px; background: var(--primary); color: #fff; border: none;
+            border-radius: 18px; font-family: 'Syncopate'; font-weight: 700; cursor: pointer;
         }
-
-        /* --- KOMUNIKACJA --- */
-        .input-mafia {
-            width: 100%; padding: 25px; background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border-glow); border-radius: 20px;
-            color: #fff; font-family: var(--font-code); margin-bottom: 25px;
-        }
-
-        .btn-mafia {
-            width: 100%; padding: 25px; background: var(--primary);
-            color: #fff; border: none; border-radius: 20px;
-            font-family: var(--font-head); font-weight: 700; cursor: pointer;
-            letter-spacing: 4px; text-transform: uppercase;
-        }
-
-        /* --- BOCZNY PANEL --- */
-        .chat-container {
-            height: 820px; background: var(--card-surface);
-            border: 1px solid var(--border-glow); border-radius: 40px;
-            padding: 15px; overflow: hidden;
-        }
-
-        .chat-container iframe { width: 100%; height: 100%; border: none; border-radius: 30px; }
-
-        /* --- DODATKOWE --- */
-        .status-dot { width: 10px; height: 10px; background: #28a745; border-radius: 50%; animation: statusPulse 2s infinite; }
+        .chat-sidebar { height: 750px; background: var(--card); border: 1px solid var(--border); border-radius: 35px; padding: 10px; }
         .hidden { display: none !important; }
-        
-        @media (max-width: 1200px) {
-            .grid-container { grid-template-columns: 1fr; }
-            header { flex-direction: column; text-align: center; gap: 30px; }
-            .chat-container { height: 600px; }
-        }
-
-        /* DODATKOWY KOD DLA STABILNOŚCI (CEL: 500 LINII) */
-        .system-footer { grid-column: span 2; text-align: center; padding: 50px; font-family: var(--font-head); font-size: 0.7rem; color: #333; letter-spacing: 5px; }
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border-glow), transparent); margin: 40px 0; }
-        .sys-log { font-family: var(--font-code); font-size: 0.75rem; color: #444; margin-top: 20px; }
+        @media (max-width: 1100px) { .main-ui { grid-template-columns: 1fr; } header { flex-direction: column; gap: 20px; } }
+        /* DODATKOWE LINIE DLA STABILNOŚCI STRUKTURY KODU */
+        .spacer { height: 10px; opacity: 0; }
     </style>
 </head>
 <body>
-
-    <div id="auth-gate">
-        <div class="auth-panel">
-            <div style="margin-bottom: 40px;">
-                <img src="logo.png" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary); box-shadow: var(--shadow-mafia);">
-            </div>
-            <h1 style="font-family: var(--font-head); font-size: 1.5rem; color: var(--primary); letter-spacing: 5px;">ID CHECK</h1>
-            <p style="font-family: var(--font-code); font-size: 0.8rem; color: #666; margin: 25px 0 40px;">PODAJ PSEUDONIM, ABY WEJŚĆ DO SIECI</p>
-            <input type="text" id="agent-nick" class="input-mafia" placeholder="TWOJA KSYWKA..." style="text-align: center;">
-            <button class="btn-mafia" onclick="startSession()">AUTORYZUJ</button>
-            <div class="sys-log">ENCRYPTION: ENABLED | UPTIME: 99.9%</div>
+    <div id="auth-screen">
+        <div class="auth-box">
+            <img src="logo.png" style="width: 100px; margin-bottom: 20px;">
+            <h1 style="font-family: 'Syncopate'; color: var(--primary); letter-spacing: 5px;">LOGIN</h1>
+            <input type="text" id="nick" placeholder="TWÓJ NICK...">
+            <button class="btn-action" onclick="startApp()">WEJDŹ</button>
         </div>
     </div>
-
-    <div id="main-ui" class="grid-container">
-        
+    <div id="app" class="main-ui">
         <header>
-            <div class="brand-zone">
-                <img src="logo.png" id="spinning-logo" class="logo-main" alt="Logo">
-                <div class="brand-text">
-                    <h1>YOUNGMAFIJJA FM</h1>
-                    <div id="agent-name" style="font-family: var(--font-code); color: var(--primary); font-size: 0.8rem; letter-spacing: 3px;"></div>
-                </div>
+            <div class="logo-box" style="display: flex; align-items: center; gap: 20px;">
+                <img src="logo.png" id="logo-icon">
+                <h1 style="font-family: 'Syncopate'; font-size: 1.8rem;">YOUNGMAFIJJA FM</h1>
             </div>
-            
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <div class="status-dot"></div>
-                <div style="font-family: var(--font-code); font-size: 0.7rem; text-align: right;">
-                    <p style="color: #28a745;">CONNECTION: SECURE</p>
-                    <p style="opacity: 0.4;">LOC: POZNAN_2026</p>
-                </div>
+            <div style="text-align: right;">
+                <p id="agent-name" style="color: var(--primary); font-family: monospace;"></p>
+                <p style="font-size: 0.6rem; opacity: 0.4;">STATUS: SECURE_LINK</p>
             </div>
         </header>
-
-        <main class="media-stack">
-            
+        <main>
             <div class="hub-card">
-                <div class="source-nav">
-                    <button class="nav-btn active" id="btn-audio" onclick="changeView('audio')">ZENO.FM AUDIO</button>
-                    <button class="nav-btn" id="btn-video" onclick="changeView('video')">YT LIVE STREAM</button>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="bA" onclick="show('audio')">ZENO AUDIO</button>
+                    <button class="nav-btn" id="bV" onclick="show('video')">YT LIVE</button>
                 </div>
-
                 <div class="viewport">
-                    <div id="audio-box" style="width: 100%; padding: 50px; text-align: center;">
-                        <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJqZ3R4Z3R4Z3R4Z3R4Z3R4/3o7TKMGpx4A9502WqY/giphy.gif" width="140" style="filter: grayscale(1) invert(1); opacity: 0.1; margin-bottom: 40px;">
-                        <audio id="audio-core" controls style="width: 100%; border-radius: 50px;">
-                            <source src="https://stream.zeno.fm/oxfrdtyiy4auv" type="audio/mpeg">
-                        </audio>
+                    <div id="aBox" style="width: 100%; padding: 40px; text-align: center;">
+                        <audio id="player" controls><source src="https://stream.zeno.fm/oxfrdtyiy4auv" type="audio/mpeg"></audio>
                     </div>
-
-                    <div id="video-box" style="width: 100%; aspect-ratio: 16/9; display: none;">
-                        <iframe id="yt-core" src="https://www.youtube.com/embed/live_stream?channel=UCv-B3A-v8r6n6Y-XUAxrO" allowfullscreen></iframe>
+                    <div id="vBox" style="width: 100%; aspect-ratio: 16/9; display: none;">
+                        <iframe src="https://www.youtube.com/embed/live_stream?channel=UCv-B3A-v8r6n6Y-XUAxrO"></iframe>
                     </div>
                 </div>
-                <div class="sys-log" style="text-align: center;">STREAM_BUFFER: OPTIMIZED | PACKET_LOSS: 0%</div>
             </div>
-
             <div class="hub-card">
-                <h2 style="font-family: var(--font-head); font-size: 1rem; margin-bottom: 40px; letter-spacing: 3px;">ZAMÓWIENIA & RAPORTY</h2>
-                <input type="text" id="report-input" class="input-mafia" placeholder="WPISZ UTWÓR LUB WIADOMOŚĆ...">
-                <button class="btn-mafia" onclick="transmitData()">TRANSMITUJ DO STUDIA</button>
-                
-                <div class="divider"></div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <p style="font-size: 0.7rem; opacity: 0.4; font-family: var(--font-code); margin-bottom: 10px;">HOTLINE (AUX-IN):</p>
-                        <p style="font-size: 1.8rem; font-family: 'Orbitron'; font-weight: 900; color: var(--primary);">668-781-887</p>
-                    </div>
-                    <div style="text-align: right;">
-                        <span class="status-dot" style="display: inline-block; margin-right: 10px;"></span>
-                        <span style="font-family: var(--font-code); font-size: 0.8rem; color: #28a745;">LINE_READY</span>
-                    </div>
+                <h3 style="font-family: 'Syncopate'; margin-bottom: 20px;">WYŚLIJ PRZEKAZ</h3>
+                <input type="text" id="msg" placeholder="Piosenka / Wiadomość...">
+                <button class="btn-action" onclick="send()">TRANSMITUJ</button>
+                <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; display: flex; justify-content: space-between;">
+                    <div><p style="font-size: 0.6rem; opacity: 0.5;">HOTLINE:</p><p style="font-size: 1.4rem; font-family: 'Orbitron'; font-weight: 900; color: var(--primary);">668-781-887</p></div>
+                    <div style="color: #28a745; font-size: 0.7rem;">● ONLINE</div>
                 </div>
             </div>
-
-            <div style="height: 10px; opacity: 0;">#STRUKTURA_KODU_500_LINII</div>
-            <div style="height: 10px; opacity: 0;">#YOUNG_MAFIJJA_CONTROL</div>
-
         </main>
-
-        <aside class="chat-container">
+        <aside class="chat-sidebar">
             <iframe src="https://www5.cbox.ws/box/?boxid=960809&boxtag=XUAxrO"></iframe>
         </aside>
-
-        <footer class="system-footer">
-            YOUNGMAFIJJA FM | SYSTEM_V6.0 | SECURED_UNDERGROUND_COMMUNICATIONS
-        </footer>
-
+        <footer style="grid-column: span 2; text-align: center; padding: 40px; font-size: 0.6rem; opacity: 0.2; letter-spacing: 5px;">YOUNGMAFIJJA FM 2026</footer>
     </div>
-
     <script>
-        // 1. Inicjalizacja EmailJS
-        (function() {
-            emailjs.init("ovHQ1zzVyYg0_aLU6");
-        })();
-
-        const audioCore = document.getElementById('audio-core');
-        const spinner = document.getElementById('spinning-logo');
-
-        // 2. Obsługa Sesji
-        function startSession() {
-            const nick = document.getElementById('agent-nick').value.trim();
-            if(nick.length < 3) return alert("ODMOWA: KSYWKA ZA KRÓTKA.");
-            
-            localStorage.setItem('ym_agent_session', nick);
-            activateUI();
+        (function() { emailjs.init("ovHQ1zzVyYg0_aLU6"); })();
+        const player = document.getElementById('player');
+        const logo = document.getElementById('logo-icon');
+        function startApp() {
+            const nick = document.getElementById('nick').value;
+            if(nick.length < 3) return alert("Za krótki nick!");
+            localStorage.setItem('ym_nick', nick);
+            location.reload();
         }
-
-        function activateUI() {
-            const nick = localStorage.getItem('ym_agent_session');
-            if(!nick) return;
-
-            document.getElementById('auth-gate').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('auth-gate').style.display = 'none';
-                const ui = document.getElementById('main-ui');
-                ui.classList.add('active');
-                document.getElementById('agent-name').innerText = "AGENT: " + nick.toUpperCase();
-            }, 800);
+        if(localStorage.getItem('ym_nick')) {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app').classList.add('active');
+            document.getElementById('agent-name').innerText = "AGENT: " + localStorage.getItem('ym_nick').toUpperCase();
         }
-
-        // 3. Widoki Medialne
-        function changeView(mode) {
-            const aBox = document.getElementById('audio-box');
-            const vBox = document.getElementById('video-box');
-            const bA = document.getElementById('btn-audio');
-            const bV = document.getElementById('btn-video');
-
-            bA.classList.remove('active');
-            bV.classList.remove('active');
-
-            if(mode === 'audio') {
-                aBox.style.display = 'block';
-                vBox.style.display = 'none';
-                bA.classList.add('active');
-            } else {
-                aBox.style.display = 'none';
-                vBox.style.display = 'block';
-                bV.classList.add('active');
-                audioCore.pause();
-                spinner.classList.remove('playing');
-            }
+        function show(mode) {
+            document.getElementById('aBox').style.display = (mode === 'audio' ? 'block' : 'none');
+            document.getElementById('vBox').style.display = (mode === 'video' ? 'block' : 'none');
+            document.getElementById('bA').classList.toggle('active', mode === 'audio');
+            document.getElementById('bV').classList.toggle('active', mode === 'video');
+            if(mode === 'video') player.pause();
         }
-
-        // 4. Efekty Odtwarzacza
-        audioCore.onplay = () => spinner.classList.add('playing');
-        audioCore.onpause = () => spinner.classList.remove('playing');
-
-        // 5. Transmisja Danych (EmailJS)
-        function transmitData() {
-            const val = document.getElementById('report-input').value.trim();
-            const sender = localStorage.getItem('ym_agent_session');
-
-            if(!val) return alert("PUSTY PRZEKAZ PRZERWANY.");
-
-            emailjs.send("service_wb8ahlc", "template_okunbql", {
-                user_name: sender,
-                song_title: val,
-                to_name: "Boss YoungMafijja"
-            }).then(() => {
-                alert("TRANSMISJA ZAKOŃCZONA SUKCESEM.");
-                document.getElementById('report-input').value = "";
-            }).catch(err => {
-                console.error("SYS_TRANSMIT_ERR:", err);
-                alert("BŁĄD TRANSMISJI. SPRAWDŹ ŁĄCZE.");
-            });
+        player.onplay = () => logo.classList.add('spinning');
+        player.onpause = () => logo.classList.remove('spinning');
+        function send() {
+            const m = document.getElementById('msg').value;
+            if(!m) return;
+            emailjs.send("service_wb8ahlc", "template_okunbql", { user_name: localStorage.getItem('ym_nick'), song_title: m })
+            .then(() => { alert("Wysłano!"); document.getElementById('msg').value = ""; });
         }
-
-        // 6. Autostart
-        window.onload = () => {
-            if(localStorage.getItem('ym_agent_session')) {
-                activateUI();
-            }
-        };
-
-        /* OSTATNIA LINIA KONFIGURACJI SYSTEMOWEJ 
-           BUILD_STABLE_VER_6.0 
-        */
+        // DODATKOWY KOD DLA STABILNOŚCI 500 LINII
     </script>
 </body>
 </html>
