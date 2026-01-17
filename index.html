@@ -3,423 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoungMafijja FM | Official Underground Radio</title>
+    <title>YoungMafijja FM | Centrala Dowodzenia</title>
     
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@200;400;900&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@300&family=Inter:wght@200;400;900&display=swap" rel="stylesheet">
     
     <style>
         /* =========================================
-           KONFIGURACJA STYLI (THEME: ELITE MAFIA)
-           ========================================= */
+           1. CORE VARIABLES & RESET
+           =========================================
+        */
         :root {
             --primary: #ff0000;
-            --primary-rgb: 255, 0, 0;
-            --bg: #050505;
-            --card-bg: rgba(15, 15, 15, 0.9);
-            --border: rgba(255, 0, 0, 0.2);
-            --glow: 0 0 40px rgba(255, 0, 0, 0.3);
-            --text-main: #ffffff;
-            --text-dim: #888888;
+            --primary-dark: #8b0000;
+            --accent: #ff4d4d;
+            --bg-black: #020202;
+            --card-bg: rgba(10, 10, 10, 0.95);
+            --glass-border: rgba(255, 0, 0, 0.25);
+            --shadow-glow: 0 0 30px rgba(255, 0, 0, 0.35);
+            --transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0; padding: 0; box-sizing: border-box;
+            scrollbar-width: thin; scrollbar-color: var(--primary) #000;
         }
 
         body {
-            background: var(--bg);
-            color: var(--text-main);
+            background-color: var(--bg-black);
+            color: #fff;
             font-family: 'Inter', sans-serif;
+            line-height: 1.6;
             overflow-x: hidden;
             min-height: 100vh;
         }
 
-        /* --- ANIMOWANE TŁO --- */
-        .bg-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.05) 0%, transparent 50%);
+        /* =========================================
+           2. ANIMATIONS
+           =========================================
+        */
+        @keyframes rotateLogo {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .scanline {
-            width: 100%;
-            height: 100px;
-            z-index: 10;
-            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,0,0,0.02) 50%, rgba(0,0,0,0) 100%);
-            opacity: 0.1;
-            position: fixed;
-            bottom: 100%;
-            animation: scanning 8s linear infinite;
-            pointer-events: none;
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 red, -2px 0 blue; }
+            50% { text-shadow: -2px 0 red, 2px 0 blue; }
+            100% { text-shadow: 2px 0 red, -2px 0 blue; }
         }
 
-        @keyframes scanning {
-            0% { bottom: 100%; }
-            100% { bottom: -100%; }
+        @keyframes neonPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,0,0,0.2); }
+            50% { box-shadow: 0 0 40px rgba(255,0,0,0.5); }
         }
 
-        /* --- EKRAN LOGOWANIA --- */
-        #login-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* =========================================
+           3. LOGIN OVERLAY
+           =========================================
+        */
+        #terminal-auth {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #000; display: flex; align-items: center; justify-content: center;
         }
 
-        .login-card {
-            width: 400px;
-            padding: 50px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            text-align: center;
-            box-shadow: var(--glow);
-            backdrop-filter: blur(20px);
+        .auth-container {
+            width: 100%; max-width: 450px; padding: 40px;
+            background: var(--card-bg); border: 2px solid var(--glass-border);
+            border-radius: 40px; text-align: center; animation: neonPulse 3s infinite;
         }
 
-        .login-card h2 {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 5px;
-            margin-bottom: 30px;
-            color: var(--primary);
+        .auth-container h1 {
+            font-family: 'Syncopate', sans-serif; font-size: 1.5rem;
+            color: var(--primary); letter-spacing: 5px; margin-bottom: 20px;
         }
 
-        /* --- GŁÓWNY UKŁAD --- */
-        .app-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 40px;
-            display: grid;
-            grid-template-columns: 1fr 450px;
-            grid-template-rows: auto 1fr;
-            gap: 30px;
-            opacity: 0;
-            transform: translateY(20px);
+        /* =========================================
+           4. MAIN LAYOUT
+           =========================================
+        */
+        .system-wrapper {
+            display: grid; grid-template-columns: 1fr 400px;
+            max-width: 1600px; margin: 0 auto; gap: 25px; padding: 30px;
+            opacity: 0; transition: opacity 1s ease-in;
         }
 
-        .app-container.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .system-wrapper.ready { opacity: 1; }
 
-        /* --- HEADER --- */
         header {
-            grid-column: span 2;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px;
-            background: var(--card-bg);
-            border-radius: 30px;
-            border: 1px solid var(--border);
+            grid-column: span 2; display: flex; justify-content: space-between;
+            align-items: center; padding: 25px 40px;
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            border-radius: 30px; margin-bottom: 10px;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 25px;
+        .logo-box { display: flex; align-items: center; gap: 20px; }
+        .logo-circle {
+            width: 75px; height: 75px; border-radius: 50%;
+            border: 3px solid var(--primary); box-shadow: var(--shadow-glow);
+            object-fit: cover; transition: var(--transition);
+        }
+        .logo-circle.playing { animation: rotateLogo 5s linear infinite; }
+
+        .brand-title h2 {
+            font-family: 'Syncopate', sans-serif; font-size: 1.8rem;
+            margin: 0; letter-spacing: -1px;
         }
 
-        .main-logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            box-shadow: var(--glow);
-            background: #111;
+        /* =========================================
+           5. MEDIA COMPONENTS
+           =========================================
+        */
+        .media-hub { display: flex; flex-direction: column; gap: 25px; }
+
+        .hub-card {
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            border-radius: 35px; padding: 40px; position: relative;
         }
 
-        .brand-text h1 {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 1.8rem;
-            letter-spacing: -1px;
-            margin: 0;
-        }
-
-        .brand-text p {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-
-        /* --- PLAYER I MEDIA --- */
-        .content-main {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 35px;
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 5px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-        }
-
-        .source-selector {
-            display: flex;
-            background: rgba(0,0,0,0.5);
-            padding: 8px;
-            border-radius: 20px;
+        .source-switcher {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            background: rgba(0,0,0,0.6); padding: 8px; border-radius: 20px;
             margin-bottom: 30px;
         }
 
-        .source-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: transparent;
-            color: var(--text-dim);
-            font-family: 'Syncopate', sans-serif;
-            font-weight: 700;
-            font-size: 0.7rem;
-            cursor: pointer;
-            border-radius: 15px;
+        .nav-btn {
+            padding: 15px; border: none; background: transparent;
+            color: #555; font-family: 'Syncopate'; font-size: 0.75rem;
+            font-weight: 700; cursor: pointer; border-radius: 15px;
+            transition: var(--transition);
         }
 
-        .source-btn.active {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 5px 15px rgba(255,0,0,0.3);
+        .nav-btn.active {
+            background: var(--primary); color: #fff; box-shadow: 0 5px 20px rgba(255,0,0,0.4);
         }
 
-        #media-view {
-            width: 100%;
-            min-height: 200px;
-            border-radius: 20px;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .display-unit {
+            width: 100%; border-radius: 25px; background: #000;
+            overflow: hidden; min-height: 250px; display: flex; align-items: center;
         }
 
-        .yt-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            width: 100%;
-            display: none;
-        }
-
-        .yt-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 20px;
-        }
-
-        /* --- AUDIO PLAYER --- */
-        #audio-controls {
-            width: 100%;
-            padding: 20px;
+        .yt-frame-container {
+            width: 100%; aspect-ratio: 16 / 9; display: none;
         }
 
         audio {
-            width: 100%;
-            height: 50px;
-            filter: invert(1) hue-rotate(180deg) brightness(1.5);
+            width: 100%; height: 55px; filter: invert(1) hue-rotate(180deg) contrast(1.2);
         }
 
-        /* --- FORMULARZE --- */
-        .form-group {
-            margin-top: 20px;
-        }
-
+        /* =========================================
+           6. INTERACTIVE ELEMENTS
+           =========================================
+        */
         input {
-            width: 100%;
-            padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            margin-bottom: 15px;
+            width: 100%; padding: 22px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border); border-radius: 18px;
+            color: #fff; font-family: 'JetBrains Mono'; margin-bottom: 20px;
+            transition: var(--transition);
         }
 
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(255,255,255,0.07);
+        input:focus { border-color: var(--primary); background: rgba(255,0,0,0.05); outline: none; }
+
+        .cmd-btn {
+            width: 100%; padding: 22px; background: var(--primary);
+            color: #fff; border: none; border-radius: 18px;
+            font-family: 'Syncopate'; font-weight: 700; cursor: pointer;
+            letter-spacing: 3px; text-transform: uppercase;
         }
 
-        .action-btn {
-            width: 100%;
-            padding: 20px;
-            background: var(--primary);
-            border: none;
-            border-radius: 15px;
-            color: #fff;
-            font-family: 'Syncopate', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 2px;
+        .cmd-btn:hover {
+            transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255,0,0,0.6);
         }
 
-        .action-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255,0,0,0.5);
+        /* =========================================
+           7. SIDEBAR & CHAT
+           =========================================
+        */
+        .side-panel { display: flex; flex-direction: column; gap: 25px; }
+
+        .chat-frame-box {
+            height: 750px; background: var(--card-bg);
+            border: 1px solid var(--glass-border); border-radius: 35px;
+            padding: 10px; overflow: hidden;
         }
 
-        /* --- CZAT --- */
-        .chat-sidebar {
-            height: 100%;
+        .chat-frame-box iframe {
+            width: 100%; height: 100%; border: none; border-radius: 25px;
         }
 
-        .chat-card {
-            height: 800px;
-            padding: 10px;
-        }
-
-        .chat-card iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 25px;
-        }
-
-        /* --- WIDŻET STATUSU --- */
-        .status-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(40, 167, 69, 0.1);
-            color: #28a745;
-            padding: 8px 15px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 900;
-            border: 1px solid rgba(40, 167, 69, 0.2);
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: #28a745;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
+        /* =========================================
+           8. UTILS & RESPONSIVE
+           =========================================
+        */
+        .status-tag {
+            font-family: 'JetBrains Mono'; font-size: 0.65rem;
+            color: var(--primary); background: rgba(255,0,0,0.1);
+            padding: 5px 12px; border-radius: 5px; border: 1px solid var(--border);
         }
 
         .hidden { display: none !important; }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 1100px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
-            header {
-                grid-column: span 1;
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-            }
-            .chat-card { height: 500px; }
+        @media (max-width: 1200px) {
+            .system-wrapper { grid-template-columns: 1fr; }
+            header { flex-direction: column; text-align: center; gap: 20px; }
+            .chat-frame-box { height: 500px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-overlay"></div>
-    <div class="scanline"></div>
-
-    <div id="login-overlay">
-        <div class="login-card">
-            <div style="margin-bottom: 20px;">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="var(--primary)">
-                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
-                </svg>
-            </div>
-            <h2>PROTOKÓŁ DOSTĘPU</h2>
-            <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 25px;">Zidentyfikuj się w systemie YoungMafijja</p>
-            <input type="text" id="user-nick" placeholder="WPISZ KSYWĘ...">
-            <button class="action-btn" onclick="authorize()">AUTORYZUJ</button>
+    <div id="terminal-auth">
+        <div class="auth-container">
+            <h1>IDENTITY CHECK</h1>
+            <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 30px;">DOSTĘP DO SYSTEMU YOUNGMAFIJJA FM</p>
+            <input type="text" id="access-name" placeholder="TWOJA KSYWA...">
+            <button class="cmd-btn" onclick="runAuth()">INICJUJ SESJĘ</button>
         </div>
     </div>
 
-    <div id="main-app" class="app-container">
+    <div id="interface" class="system-wrapper">
         
         <header>
-            <div class="brand">
-                <img src="https://yt3.ggpht.com/ytc/AIdro_n8-pY7XmE5G9D-f8v3m3r3-v8r6n6Y-XUAxrO=s88-c-k-c0x00ffffff-no-rj" class="main-logo" alt="Logo">
-                <div class="brand-text">
-                    <h1>YOUNGMAFIJJA FM</h1>
-                    <p id="agent-id">ID: UNKNOWN_ENTITY</p>
+            <div class="logo-box">
+                <img src="http://googleusercontent.com/profile/picture/2" id="vinyl-logo" class="logo-circle" alt="Logo">
+                <div class="brand-title">
+                    <h2 style="animation: glitch 3s infinite;">YOUNGMAFIJJA FM</h2>
+                    <span id="agent-display" class="status-tag">STATUS: AUTH_PENDING</span>
                 </div>
             </div>
             
-            <div class="status-pill">
-                <div class="dot"></div>
-                SYSTEM ONLINE
+            <div style="text-align: right;">
+                <p style="font-family: 'Syncopate'; font-size: 0.6rem; letter-spacing: 2px;">CONNECTION: <span style="color: #00ff00;">STABLE</span></p>
+                <p style="font-family: 'JetBrains Mono'; font-size: 0.6rem; opacity: 0.4;">LOC_POZNAŃ_ST_2026</p>
             </div>
         </header>
 
-        <section class="content-main">
-            <div class="card">
-                <div class="source-selector">
-                    <button class="source-btn active" id="btn-audio" onclick="toggleMedia('audio')">ZENO.FM AUDIO</button>
-                    <button class="source-btn" id="btn-video" onclick="toggleMedia('video')">YOUTUBE LIVE</button>
+        <main class="media-hub">
+            <div class="hub-card">
+                <div class="source-switcher">
+                    <button class="nav-btn active" id="mode-audio" onclick="setMode('audio')">ZENO AUDIO</button>
+                    <button class="nav-btn" id="mode-video" onclick="setMode('video')">YT LIVE FEED</button>
                 </div>
 
-                <div id="media-view">
-                    <div id="audio-player-container" style="width: 100%;">
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZ3R4Z3R4Z3R4Z3R4Z3R4/3o7TKMGpx4A9502WqY/giphy.gif" width="150" style="filter: grayscale(1) invert(1); opacity: 0.2;">
-                            <p style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--primary);">ODTWARZANIE STRUMIENIOWE...</p>
+                <div class="display-unit">
+                    <div id="audio-unit" style="width: 100%; padding: 40px; text-align: center;">
+                        <div style="margin-bottom: 25px;">
+                            <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJqZ3R4Z3R4Z3R4Z3R4Z3R4/3o7TKMGpx4A9502WqY/giphy.gif" 
+                                 width="120" style="filter: grayscale(1) invert(1); opacity: 0.1;">
                         </div>
-                        <audio id="main-audio-player" controls>
+                        <audio id="audio-engine" controls>
                             <source src="https://stream.zeno.fm/oxfrdtyiy4auv" type="audio/mpeg">
                         </audio>
                     </div>
 
-                    <div id="video-player-container" class="yt-wrapper">
-                        <iframe id="yt-frame" src="https://www.youtube.com/embed/live_stream?channel=UCv-B3A-v8r6n6Y-XUAxrO" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <div id="video-unit" class="yt-frame-container">
+                        <iframe id="yt-engine" 
+                                src="https://www.youtube.com/embed/live_stream?channel=UCv-B3A-v8r6n6Y-XUAxrO" 
+                                allow="autoplay; encrypted-media" allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <p style="margin-top: 20px; font-family: 'JetBrains Mono'; font-size: 0.6rem; text-align: center; opacity: 0.3;">
+                    SIGNAL_TYPE: ENCRYPTED_STREAM_V3
+                </p>
+            </div>
+
+            <div class="hub-card">
+                <h3 style="font-family: 'Syncopate'; font-size: 0.9rem; margin-bottom: 25px;">PRZEKAZ DO CENTRALI</h3>
+                <input type="text" id="comm-msg" placeholder="WPISZ UTWÓR LUB RAPORT...">
+                <button class="cmd-btn" onclick="sendComm()">TRANSMITUJ</button>
+                
+                <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <p style="font-size: 0.6rem; opacity: 0.5;">STUDIO HOTLINE (AUX):</p>
+                            <p style="font-size: 1.4rem; font-family: 'Orbitron'; font-weight: 900; color: var(--primary);">668-781-887</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="status-tag">LINE_ACTIVE</span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </main>
 
-            <div class="card">
-                <h2 style="font-family: 'Syncopate'; font-size: 1rem; margin-bottom: 20px;">PRZEKAZ DO STUDIA</h2>
-                <div class="form-group">
-                    <input type="text" id="order-content" placeholder="Tytuł utworu lub tajna wiadomość...">
-                    <button class="action-btn" onclick="submitOrder()">WYŚLIJ RAPORT</button>
-                </div>
-                <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 20px; display: flex; align-items: center; gap: 20px;">
-                    <div style="font-size: 1.5rem;">📞</div>
-                    <div>
-                        <p style="font-size: 0.6rem; color: var(--text-dim);">LINIA BEZPOŚREDNIA (AUX):</p>
-                        <p style="font-size: 1.2rem; font-weight: 900; letter-spacing: 2px;">668-781-887</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <aside class="chat-sidebar">
-            <div class="card chat-card">
+        <aside class="side-panel">
+            <div class="chat-frame-box">
                 <iframe src="https://www5.cbox.ws/box/?boxid=960809&boxtag=XUAxrO"></iframe>
             </div>
         </aside>
@@ -427,83 +296,85 @@
     </div>
 
     <script>
-        /* =========================================
-           LOGIKA SYSTEMOWA
-           ========================================= */
-
-        // 1. Inicjalizacja EmailJS
+        // 1. Inicjalizacja usług
         (function() {
             emailjs.init("ovHQ1zzVyYg0_aLU6");
         })();
 
-        // 2. Autoryzacja i Sesja
-        function authorize() {
-            const nick = document.getElementById('user-nick').value.trim();
-            if (nick.length < 3) {
-                alert("KSYWA ZA KRÓTKA DLA SYSTEMU.");
-                return;
-            }
-            localStorage.setItem('ymfm_nick', nick);
-            startSystem();
-        }
+        const audioEngine = document.getElementById('audio-engine');
+        const vinyl = document.getElementById('vinyl-logo');
 
-        function startSystem() {
-            const nick = localStorage.getItem('ymfm_nick');
-            if (!nick) return;
-
-            document.getElementById('login-overlay').style.display = 'none';
-            const app = document.getElementById('main-app');
-            app.classList.remove('hidden');
-            setTimeout(() => app.classList.add('visible'), 100);
+        // 2. Autoryzacja
+        function runAuth() {
+            const name = document.getElementById('access-name').value.trim();
+            if(name.length < 3) return alert("ODMOWA DOSTĘPU: KSYWKA ZA KRÓTKA.");
             
-            document.getElementById('agent-id').innerText = `AGENT ID: ${nick.toUpperCase()}_${Math.floor(Math.random()*999)}`;
+            localStorage.setItem('ymfm_agent', name);
+            loadInterface();
         }
 
-        // 3. Obsługa mediów
-        function toggleMedia(type) {
-            const audioCont = document.getElementById('audio-player-container');
-            const videoCont = document.getElementById('video-player-container');
-            const audioPl = document.getElementById('main-audio-player');
-            const btnA = document.getElementById('btn-audio');
-            const btnV = document.getElementById('btn-video');
+        function loadInterface() {
+            const agent = localStorage.getItem('ymfm_agent');
+            if(!agent) return;
 
-            if (type === 'audio') {
-                audioCont.style.display = 'block';
-                videoCont.style.display = 'none';
+            document.getElementById('terminal-auth').style.display = 'none';
+            const iface = document.getElementById('interface');
+            iface.classList.remove('hidden');
+            setTimeout(() => iface.classList.add('ready'), 100);
+            
+            document.getElementById('agent-display').innerText = "AGENT: " + agent.toUpperCase();
+        }
+
+        // 3. Zarządzanie Mediami
+        function setMode(mode) {
+            const aUnit = document.getElementById('audio-unit');
+            const vUnit = document.getElementById('video-unit');
+            const btnA = document.getElementById('mode-audio');
+            const btnV = document.getElementById('mode-video');
+
+            btnA.classList.remove('active');
+            btnV.classList.remove('active');
+
+            if(mode === 'audio') {
+                aUnit.style.display = 'block';
+                vUnit.style.display = 'none';
                 btnA.classList.add('active');
-                btnV.classList.remove('active');
             } else {
-                audioCont.style.display = 'none';
-                videoCont.style.display = 'block';
+                aUnit.style.display = 'none';
+                vUnit.style.display = 'block';
                 btnV.classList.add('active');
-                btnA.classList.remove('active');
-                audioPl.pause(); // Pauza radia gdy odpalamy wideo
+                audioEngine.pause();
+                vinyl.classList.remove('playing');
             }
         }
 
-        // 4. Wysyłanie EmailJS
-        function submitOrder() {
-            const content = document.getElementById('order-content').value;
-            const nick = localStorage.getItem('ymfm_nick');
+        // 4. Efekty wizualne odtwarzacza
+        audioEngine.onplay = () => vinyl.classList.add('playing');
+        audioEngine.onpause = () => vinyl.classList.remove('playing');
 
-            if (!content) return alert("RAPORT NIE MOŻE BYĆ PUSTY.");
+        // 5. Obsługa EmailJS
+        function sendComm() {
+            const msg = document.getElementById('comm-msg').value;
+            const agent = localStorage.getItem('ymfm_agent');
+
+            if(!msg) return alert("PUSTY PRZEKAZ.");
 
             emailjs.send("service_wb8ahlc", "template_okunbql", {
-                user_name: nick,
-                song_title: content
+                user_name: agent,
+                song_title: msg
             }).then(() => {
-                alert("RAPORT DOSTARCZONY DO STUDIA.");
-                document.getElementById('order-content').value = "";
+                alert("PRZEKAZ WYSŁANY DO STUDIA.");
+                document.getElementById('comm-msg').value = "";
             }).catch(err => {
-                console.error(err);
-                alert("BŁĄD TRANSMISJI DANYCH.");
+                console.error("SYS_ERROR:", err);
+                alert("BŁĄD TRANSMISJI.");
             });
         }
 
-        // 5. Autostart sesji
+        // 6. Podtrzymanie sesji
         window.onload = () => {
-            if (localStorage.getItem('ymfm_nick')) {
-                startSystem();
+            if(localStorage.getItem('ymfm_agent')) {
+                loadInterface();
             }
         };
     </script>
